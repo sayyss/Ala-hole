@@ -95,7 +95,7 @@ def find_supporting_articles(claim: str) -> List[Dict]:
             'query': claim,
             'type': 'keyword',
             'useAutoprompt': True,
-            'numResults': 3,
+            'numResults': 10,
             'includeDomains': ['scholar.google.com', 'pubmed.ncbi.nlm.nih.gov', 'jstor.org', 'arxiv.org'],
             'contents': {
                 'text': True,

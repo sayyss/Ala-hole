@@ -5,133 +5,582 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Citation Crawler</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        textarea {
-            width: 100%;
-            height: 200px;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            resize: vertical;
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
-        button {
-            background-color: #007bff;
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+            padding: 12px 24px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .logo::before {
+            content: "✏️";
+            margin-right: 8px;
+        }
+
+        .start-btn {
+            background: #4f46e5;
             color: white;
-            padding: 12px 30px;
+            padding: 8px 16px;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 6px;
             cursor: pointer;
-            margin-top: 15px;
+            font-size: 14px;
+            font-weight: 500;
         }
-        button:hover {
-            background-color: #0056b3;
+
+        .start-btn:hover {
+            background: #4338ca;
         }
-        button:disabled {
-            background-color: #6c757d;
+
+        .main-container {
+            display: flex;
+            margin-top: 60px;
+            min-height: calc(100vh - 60px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #e9ecef;
+            padding: 20px;
+            position: fixed;
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+        }
+
+        .sidebar h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            margin-bottom: 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar-item:hover {
+            background: #f8f9fa;
+        }
+
+        .sidebar-item.active {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .sidebar-item::before {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .sidebar-item.essay::before { content: "📄"; }
+        .sidebar-item.results::before { content: "📚"; }
+        .sidebar-item.citations::before { content: "🔗"; }
+
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 24px;
+            max-width: 1200px;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .content-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .filter-tab {
+            padding: 8px 16px;
+            border: 1px solid #e9ecef;
+            background: white;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-tab.active {
+            background: #4f46e5;
+            color: white;
+            border-color: #4f46e5;
+        }
+
+        .filter-tab:hover:not(.active) {
+            border-color: #4f46e5;
+        }
+
+        .essay-input {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .essay-textarea {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 16px;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .essay-textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .analyze-btn {
+            background: #4f46e5;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 16px;
+        }
+
+        .analyze-btn:hover:not(:disabled) {
+            background: #4338ca;
+        }
+
+        .analyze-btn:disabled {
+            opacity: 0.6;
             cursor: not-allowed;
         }
-        .loading {
-            text-align: center;
-            margin-top: 20px;
-            font-style: italic;
-            color: #666;
-        }
-        .results {
-            margin-top: 30px;
-        }
-        .claim {
-            background-color: #f8f9fa;
+
+        .research-item {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
             padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid #007bff;
-            border-radius: 5px;
+            margin-bottom: 16px;
+            transition: box-shadow 0.2s;
         }
-        .claim h3 {
+
+        .research-item:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .research-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .research-icon {
+            width: 24px;
+            height: 24px;
+            background: #fef3c7;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .research-content {
+            flex: 1;
+        }
+
+        .research-title {
+            font-size: 16px;
+            font-weight: 600;
             color: #333;
-            margin-top: 0;
+            margin-bottom: 8px;
+            line-height: 1.4;
         }
-        .article {
-            background-color: white;
-            padding: 15px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .article h4 {
-            color: #007bff;
-            margin-top: 0;
-        }
-        .article a {
-            color: #007bff;
+
+        .research-title a {
+            color: #333;
             text-decoration: none;
         }
-        .article a:hover {
-            text-decoration: underline;
+
+        .research-title a:hover {
+            color: #4f46e5;
         }
-        .quote {
-            background-color: #f8f9fa;
-            padding: 10px;
-            margin: 10px 0;
-            border-left: 3px solid #28a745;
+
+        .research-meta {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .research-description {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .research-quote {
+            background: #f8f9fa;
+            border-left: 3px solid #4f46e5;
+            padding: 12px 16px;
+            margin: 8px 0;
             font-style: italic;
+            font-size: 14px;
+            color: #555;
         }
+
+        .research-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #666;
+            text-decoration: none;
+            font-size: 13px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #f8f9fa;
+            color: #4f46e5;
+        }
+
+        .claim-section {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .claim-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 24px;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .stat-number {
+            font-weight: 600;
+            color: #4f46e5;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #4f46e5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
         .error {
-            color: #dc3545;
-            background-color: #f8d7da;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 20px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 40px;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Citation Crawler</h1>
-        <p>Enter your essay below and we'll find supporting citations and research for the claims made in it.</p>
-        
-        <form id="essayForm">
-            <textarea id="essayText" placeholder="Paste your essay here..." required></textarea>
-            <br>
-            <button type="submit" id="submitBtn">Find Citations</button>
-        </form>
-        
-        <div id="loading" class="loading" style="display: none;">
-            Analyzing your essay and finding supporting citations...
+    <div class="header">
+        <div class="logo">Citation Crawler</div>
+        <button class="start-btn" onclick="showEssayInput()">Start writing</button>
+    </div>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <h3>Navigation</h3>
+            <div class="sidebar-item essay active" onclick="showSection('essay')">
+                Your Essay
+            </div>
+            <div class="sidebar-item results" onclick="showSection('results')">
+                Research Results
+            </div>
+            <div class="sidebar-item citations" onclick="showSection('citations')">
+                Citations
+            </div>
         </div>
-        
-        <div id="error" class="error" style="display: none;"></div>
-        
-        <div id="results" class="results" style="display: none;"></div>
+
+        <div class="main-content">
+            <div id="essay-section" class="content-section">
+                <div class="content-header">
+                    <h1 class="content-title">Analyze Your Essay</h1>
+                </div>
+                
+                <div class="essay-input">
+                    <form id="essayForm">
+                        <textarea 
+                            id="essayText" 
+                            class="essay-textarea" 
+                            placeholder="Paste your essay here and we'll analyze it to find supporting citations and research papers..."
+                            required
+                        ></textarea>
+                        <button type="submit" class="analyze-btn" id="submitBtn">
+                            Analyze & Find Citations
+                        </button>
+                    </form>
+                </div>
+
+                <div id="loading" class="loading" style="display: none;">
+                    Analyzing your essay and finding supporting citations...
+                </div>
+
+                <div id="error" class="error" style="display: none;"></div>
+            </div>
+
+            <div id="results-section" class="content-section" style="display: none;">
+                <div class="content-header">
+                    <h1 class="content-title">Research Results</h1>
+                </div>
+
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all">All</button>
+                    <button class="filter-tab" data-filter="discover">Discover</button>
+                    <button class="filter-tab" data-filter="library">Library</button>
+                    <button class="filter-tab" data-filter="recent">Most Recent</button>
+                </div>
+
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search citations..." id="searchInput">
+                </div>
+
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <span class="stat-number" id="claims-count">0</span>
+                        <span>Claims Found</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="articles-count">0</span>
+                        <span>Articles Found</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="quotes-count">0</span>
+                        <span>Supporting Quotes</span>
+                    </div>
+                </div>
+
+                <div id="results-content"></div>
+            </div>
+
+            <div id="citations-section" class="content-section" style="display: none;">
+                <div class="content-header">
+                    <h1 class="content-title">Citations by Claim</h1>
+                </div>
+                <div id="citations-content"></div>
+            </div>
+
+            <div id="empty-state" class="empty-state">
+                <h3>Ready to Find Citations</h3>
+                <p>Enter your essay to discover supporting research and citations from academic sources</p>
+            </div>
+        </div>
     </div>
 
     <script>
+        let currentResults = null;
+        let currentSection = 'essay';
+
+        function showSection(section) {
+            // Update sidebar
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`.sidebar-item.${section}`).classList.add('active');
+
+            // Update content
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(`${section}-section`).style.display = 'block';
+            
+            // Hide empty state when showing results
+            if (section === 'results' || section === 'citations') {
+                document.getElementById('empty-state').style.display = 'none';
+            }
+            
+            currentSection = section;
+        }
+
+        function showEssayInput() {
+            showSection('essay');
+        }
+
+        // Filter tabs
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            filterResults(query);
+        });
+
+        function filterResults(query) {
+            const items = document.querySelectorAll('.research-item');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(query) ? 'block' : 'none';
+            });
+        }
+
         document.getElementById('essayForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const essay = document.getElementById('essayText').value;
             const submitBtn = document.getElementById('submitBtn');
             const loading = document.getElementById('loading');
-            const results = document.getElementById('results');
             const error = document.getElementById('error');
             
             if (!essay.trim()) {
@@ -142,7 +591,6 @@
             // Show loading state
             submitBtn.disabled = true;
             loading.style.display = 'block';
-            results.style.display = 'none';
             error.style.display = 'none';
             
             // Send request to backend
@@ -158,7 +606,9 @@
                 if (data.error) {
                     showError(data.error);
                 } else {
+                    currentResults = data.results;
                     showResults(data.results);
+                    showSection('results');
                 }
             })
             .catch(error => {
@@ -175,73 +625,144 @@
             const error = document.getElementById('error');
             error.textContent = message;
             error.style.display = 'block';
-            document.getElementById('results').style.display = 'none';
         }
         
         function showResults(results) {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '';
-            
             if (results.length === 0) {
-                resultsDiv.innerHTML = '<p>No claims found in the essay.</p>';
-                resultsDiv.style.display = 'block';
+                document.getElementById('empty-state').style.display = 'block';
                 return;
             }
             
-            results.forEach(result => {
-                const claimDiv = document.createElement('div');
-                claimDiv.className = 'claim';
-                
-                const claimTitle = document.createElement('h3');
-                claimTitle.textContent = 'Claim: ' + result.claim;
-                claimDiv.appendChild(claimTitle);
-                
-                if (result.articles.length === 0) {
-                    const noArticles = document.createElement('p');
-                    noArticles.textContent = 'No supporting articles found for this claim.';
-                    claimDiv.appendChild(noArticles);
-                } else {
-                    result.articles.forEach(article => {
-                        const articleDiv = document.createElement('div');
-                        articleDiv.className = 'article';
-                        
-                        const articleTitle = document.createElement('h4');
-                        const articleLink = document.createElement('a');
-                        articleLink.href = article.url;
-                        articleLink.target = '_blank';
-                        articleLink.textContent = article.title;
-                        articleTitle.appendChild(articleLink);
-                        articleDiv.appendChild(articleTitle);
-                        
-                        if (article.publishedDate) {
-                            const dateP = document.createElement('p');
-                            dateP.textContent = 'Published: ' + article.publishedDate;
-                            dateP.style.color = '#666';
-                            dateP.style.fontSize = '14px';
-                            articleDiv.appendChild(dateP);
-                        }
-                        
-                        if (article.quotes && article.quotes.length > 0) {
-                            const quotesTitle = document.createElement('h5');
-                            quotesTitle.textContent = 'Supporting Quotes:';
-                            articleDiv.appendChild(quotesTitle);
-                            
-                            article.quotes.forEach(quote => {
-                                const quoteDiv = document.createElement('div');
-                                quoteDiv.className = 'quote';
-                                quoteDiv.textContent = quote;
-                                articleDiv.appendChild(quoteDiv);
-                            });
-                        }
-                        
-                        claimDiv.appendChild(articleDiv);
-                    });
-                }
-                
-                resultsDiv.appendChild(claimDiv);
-            });
+            updateStats(results);
+            renderResults(results);
+            renderCitations(results);
             
-            resultsDiv.style.display = 'block';
+            document.getElementById('empty-state').style.display = 'none';
+        }
+        
+        function updateStats(results) {
+            const claimsCount = results.length;
+            const articlesCount = results.reduce((sum, result) => sum + result.articles.length, 0);
+            const quotesCount = results.reduce((sum, result) => 
+                sum + result.articles.reduce((articleSum, article) => 
+                    articleSum + (article.quotes ? article.quotes.length : 0), 0), 0);
+            
+            document.getElementById('claims-count').textContent = claimsCount;
+            document.getElementById('articles-count').textContent = articlesCount;
+            document.getElementById('quotes-count').textContent = quotesCount;
+        }
+        
+        function renderResults(results) {
+            const resultsContent = document.getElementById('results-content');
+            resultsContent.innerHTML = '';
+            
+            results.forEach(result => {
+                result.articles.forEach(article => {
+                    const item = document.createElement('div');
+                    item.className = 'research-item';
+                    
+                    const year = article.publishedDate ? new Date(article.publishedDate).getFullYear() : 'Unknown';
+                    const quotes = article.quotes || [];
+                    
+                    item.innerHTML = `
+                        <div class="research-header">
+                            <div class="research-icon">📄</div>
+                            <div class="research-content">
+                                <div class="research-title">
+                                    <a href="${article.url}" target="_blank">${article.title || 'Untitled Article'}</a>
+                                </div>
+                                <div class="research-meta">
+                                    ${article.publishedDate ? `Published: ${article.publishedDate}` : 'Publication date unknown'} • 
+                                    Supports: "${result.claim.substring(0, 60)}..."
+                                </div>
+                                <div class="research-description">
+                                    ${quotes.length > 0 ? quotes[0].substring(0, 200) + '...' : 'No description available'}
+                                </div>
+                                ${quotes.slice(1, 3).map(quote => `
+                                    <div class="research-quote">
+                                        ${quote.substring(0, 300)}${quote.length > 300 ? '...' : ''}
+                                    </div>
+                                `).join('')}
+                                <div class="research-actions">
+                                    <a href="#" class="action-btn">
+                                        ➕ Cite
+                                    </a>
+                                    <a href="${article.url}" target="_blank" class="action-btn">
+                                        👁️ View
+                                    </a>
+                                    <a href="#" class="action-btn">
+                                        📚 Add to Library
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    resultsContent.appendChild(item);
+                });
+            });
+        }
+        
+        function renderCitations(results) {
+            const citationsContent = document.getElementById('citations-content');
+            citationsContent.innerHTML = '';
+            
+            results.forEach(result => {
+                const claimSection = document.createElement('div');
+                claimSection.className = 'claim-section';
+                
+                claimSection.innerHTML = `
+                    <div class="claim-title">${result.claim}</div>
+                    <div class="stats-bar">
+                        <div class="stat-item">
+                            <span class="stat-number">${result.articles.length}</span>
+                            <span>Supporting Articles</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">${result.articles.reduce((sum, article) => sum + (article.quotes ? article.quotes.length : 0), 0)}</span>
+                            <span>Supporting Quotes</span>
+                        </div>
+                    </div>
+                `;
+                
+                result.articles.forEach(article => {
+                    const item = document.createElement('div');
+                    item.className = 'research-item';
+                    
+                    const quotes = article.quotes || [];
+                    
+                    item.innerHTML = `
+                        <div class="research-header">
+                            <div class="research-icon">📄</div>
+                            <div class="research-content">
+                                <div class="research-title">
+                                    <a href="${article.url}" target="_blank">${article.title || 'Untitled Article'}</a>
+                                </div>
+                                <div class="research-meta">
+                                    ${article.publishedDate ? `Published: ${article.publishedDate}` : 'Publication date unknown'}
+                                </div>
+                                ${quotes.map(quote => `
+                                    <div class="research-quote">
+                                        ${quote.substring(0, 400)}${quote.length > 400 ? '...' : ''}
+                                    </div>
+                                `).join('')}
+                                <div class="research-actions">
+                                    <a href="#" class="action-btn">
+                                        ➕ Cite
+                                    </a>
+                                    <a href="${article.url}" target="_blank" class="action-btn">
+                                        👁️ View
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    claimSection.appendChild(item);
+                });
+                
+                citationsContent.appendChild(claimSection);
+            });
         }
     </script>
 </body>
