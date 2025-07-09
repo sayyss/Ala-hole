@@ -40,7 +40,8 @@ def analyze_essay():
         
         return jsonify({
             'claims': claims,
-            'results': results
+            'results': results,
+            'original_essay': essay
         })
     
     except Exception as e:

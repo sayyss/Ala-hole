@@ -109,6 +109,8 @@
         }
 
         .sidebar-item.essay::before { content: "📄"; }
+        .sidebar-item.annotated::before { content: "✏️"; }
+        .sidebar-item.mla::before { content: "📝"; }
         .sidebar-item.results::before { content: "📚"; }
         .sidebar-item.citations::before { content: "🔗"; }
 
@@ -416,6 +418,225 @@
             color: #666;
         }
 
+        .annotated-essay {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 24px;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .fact-highlight {
+            padding: 2px 4px;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .fact-highlight.supported {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+
+        .fact-highlight.unsupported {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+
+        .fact-highlight:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tooltip {
+            position: absolute;
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            white-space: nowrap;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 5px;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #333;
+        }
+
+        .tooltip.show {
+            opacity: 1;
+        }
+
+        .citation-link {
+            color: #4f46e5;
+            text-decoration: none;
+        }
+
+        .citation-link:hover {
+            text-decoration: underline;
+        }
+
+        .legend {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            border: 1px solid;
+        }
+
+        .legend-color.supported {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .legend-color.unsupported {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        .mla-essay {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 60px;
+            margin-bottom: 24px;
+            line-height: 2;
+            font-size: 12pt;
+            font-family: "Times New Roman", serif;
+            max-width: 8.5in;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .mla-header {
+            text-align: left;
+            margin-bottom: 24px;
+        }
+
+        .mla-header div {
+            margin-bottom: 0;
+        }
+
+        .mla-title {
+            text-align: center;
+            font-weight: bold;
+            margin: 24px 0;
+        }
+
+        .mla-essay p {
+            text-indent: 0.5in;
+            margin-bottom: 0;
+            text-align: justify;
+        }
+
+        .mla-citation {
+            background-color: #e3f2fd;
+            border-radius: 3px;
+            padding: 1px 3px;
+            font-size: 11pt;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .mla-citation:hover {
+            background-color: #bbdefb;
+        }
+
+        .works-cited {
+            margin-top: 48px;
+            page-break-before: always;
+        }
+
+        .works-cited h2 {
+            text-align: center;
+            font-size: 12pt;
+            font-weight: bold;
+            margin-bottom: 24px;
+        }
+
+        .works-cited-entry {
+            margin-bottom: 12px;
+            text-indent: -0.5in;
+            margin-left: 0.5in;
+            font-size: 12pt;
+        }
+
+        .works-cited-entry a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .works-cited-entry a:hover {
+            text-decoration: underline;
+        }
+
+        .mla-controls {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .download-btn {
+            background: #4f46e5;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .download-btn:hover {
+            background: #4338ca;
+        }
+
+        .citation-count {
+            font-size: 14px;
+            color: #666;
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -424,6 +645,11 @@
             
             .main-content {
                 margin-left: 0;
+            }
+            
+            .legend {
+                flex-direction: column;
+                gap: 15px;
             }
         }
     </style>
@@ -439,6 +665,12 @@
             <h3>Navigation</h3>
             <div class="sidebar-item essay active" onclick="showSection('essay')">
                 Your Essay
+            </div>
+            <div class="sidebar-item annotated" onclick="showSection('annotated')">
+                Annotated Essay
+            </div>
+            <div class="sidebar-item mla" onclick="showSection('mla')">
+                MLA Format
             </div>
             <div class="sidebar-item results" onclick="showSection('results')">
                 Research Results
@@ -473,6 +705,49 @@
                 </div>
 
                 <div id="error" class="error" style="display: none;"></div>
+            </div>
+
+            <div id="annotated-section" class="content-section" style="display: none;">
+                <div class="content-header">
+                    <h1 class="content-title">Annotated Essay</h1>
+                </div>
+                
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color supported"></div>
+                        <span>Facts with citations found</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color unsupported"></div>
+                        <span>Facts without citations</span>
+                    </div>
+                    <div style="margin-left: auto; font-size: 14px; color: #666;">
+                        Hover over highlighted text to see citations
+                    </div>
+                </div>
+                
+                <div class="annotated-essay" id="annotated-essay-content">
+                    <p>Submit your essay to see annotations...</p>
+                </div>
+            </div>
+
+            <div id="mla-section" class="content-section" style="display: none;">
+                <div class="content-header">
+                    <h1 class="content-title">MLA Formatted Essay</h1>
+                </div>
+                
+                <div class="mla-controls">
+                    <div class="citation-count" id="mla-citation-count">
+                        0 citations added to essay
+                    </div>
+                    <button class="download-btn" onclick="downloadMLA()">
+                        📄 Download as Word Document
+                    </button>
+                </div>
+                
+                <div class="mla-essay" id="mla-essay-content">
+                    <p>Submit your essay to see MLA formatted version...</p>
+                </div>
             </div>
 
             <div id="results-section" class="content-section" style="display: none;">
@@ -527,6 +802,7 @@
     <script>
         let currentResults = null;
         let currentSection = 'essay';
+        let originalEssay = null;
 
         function showSection(section) {
             // Update sidebar
@@ -542,7 +818,7 @@
             document.getElementById(`${section}-section`).style.display = 'block';
             
             // Hide empty state when showing results
-            if (section === 'results' || section === 'citations') {
+            if (section === 'results' || section === 'citations' || section === 'annotated' || section === 'mla') {
                 document.getElementById('empty-state').style.display = 'none';
             }
             
@@ -607,7 +883,10 @@
                     showError(data.error);
                 } else {
                     currentResults = data.results;
+                    originalEssay = data.original_essay;
                     showResults(data.results);
+                    renderAnnotatedEssay(data.original_essay, data.results);
+                    renderMLAEssay(data.original_essay, data.results);
                     showSection('results');
                 }
             })
@@ -763,6 +1042,327 @@
                 
                 citationsContent.appendChild(claimSection);
             });
+        }
+        
+        function renderAnnotatedEssay(essay, results) {
+            const content = document.getElementById('annotated-essay-content');
+            
+            // Create a map of claims to their articles for easy lookup
+            const claimMap = new Map();
+            results.forEach(result => {
+                claimMap.set(result.claim.toLowerCase(), result.articles);
+            });
+            
+            let annotatedText = essay;
+            const highlights = [];
+            
+            // Find all claims in the essay text and mark them for highlighting
+            results.forEach(result => {
+                const claim = result.claim;
+                const articles = result.articles;
+                
+                // Try to find this claim or parts of it in the essay
+                const words = claim.toLowerCase().split(' ');
+                
+                // Look for key phrases from the claim in the essay
+                for (let i = 3; i <= Math.min(words.length, 10); i++) {
+                    for (let j = 0; j <= words.length - i; j++) {
+                        const phrase = words.slice(j, j + i).join(' ');
+                        const regex = new RegExp(`\\b${phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+                        
+                        let match;
+                        while ((match = regex.exec(essay)) !== null) {
+                            // Check if this position is already highlighted
+                            const isOverlapping = highlights.some(h => 
+                                (match.index >= h.start && match.index < h.end) ||
+                                (match.index + match[0].length > h.start && match.index + match[0].length <= h.end)
+                            );
+                            
+                            if (!isOverlapping) {
+                                highlights.push({
+                                    start: match.index,
+                                    end: match.index + match[0].length,
+                                    text: match[0],
+                                    claim: claim,
+                                    articles: articles,
+                                    supported: articles.length > 0
+                                });
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Sort highlights by start position (reverse order for processing)
+            highlights.sort((a, b) => b.start - a.start);
+            
+            // Apply highlights to the text
+            highlights.forEach((highlight, index) => {
+                const beforeText = annotatedText.substring(0, highlight.start);
+                const afterText = annotatedText.substring(highlight.end);
+                
+                const tooltipContent = highlight.supported ? 
+                    `Found ${highlight.articles.length} supporting source${highlight.articles.length > 1 ? 's' : ''}: ${highlight.articles.slice(0, 3).map(a => `<a href="${a.url}" target="_blank" class="citation-link">${a.title || 'Source'}</a>`).join(', ')}` :
+                    'No supporting sources found';
+                
+                const highlightClass = highlight.supported ? 'supported' : 'unsupported';
+                const highlightHTML = `<span class="fact-highlight ${highlightClass}" data-tooltip="${tooltipContent.replace(/"/g, '&quot;')}">${highlight.text}</span>`;
+                
+                annotatedText = beforeText + highlightHTML + afterText;
+            });
+            
+            // Convert line breaks to paragraphs
+            const paragraphs = annotatedText.split('\n\n').map(p => p.trim()).filter(p => p.length > 0);
+            const formattedText = paragraphs.map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
+            
+            content.innerHTML = formattedText;
+            
+            // Add tooltip functionality
+            addTooltipListeners();
+        }
+        
+        function addTooltipListeners() {
+            const highlights = document.querySelectorAll('.fact-highlight');
+            
+            highlights.forEach(highlight => {
+                highlight.addEventListener('mouseenter', function(e) {
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'tooltip show';
+                    tooltip.innerHTML = this.getAttribute('data-tooltip');
+                    
+                    this.appendChild(tooltip);
+                    
+                    // Position tooltip to stay within viewport
+                    const rect = this.getBoundingClientRect();
+                    const tooltipRect = tooltip.getBoundingClientRect();
+                    
+                    if (rect.left + tooltipRect.width > window.innerWidth) {
+                        tooltip.style.left = 'auto';
+                        tooltip.style.right = '0';
+                        tooltip.style.transform = 'translateX(0)';
+                    }
+                });
+                
+                highlight.addEventListener('mouseleave', function() {
+                    const tooltip = this.querySelector('.tooltip');
+                    if (tooltip) {
+                        tooltip.remove();
+                    }
+                });
+            });
+        }
+        
+        function renderMLAEssay(essay, results) {
+            const content = document.getElementById('mla-essay-content');
+            const citationCount = document.getElementById('mla-citation-count');
+            
+            // Create citation map and generate Works Cited entries
+            const citationMap = new Map();
+            const worksCited = [];
+            let citationIndex = 1;
+            
+            // Build citation map
+            results.forEach(result => {
+                result.articles.forEach(article => {
+                    if (!citationMap.has(article.url)) {
+                        const citation = generateMLACitation(article, citationIndex);
+                        citationMap.set(article.url, {
+                            index: citationIndex,
+                            shortCitation: citation.short,
+                            fullCitation: citation.full,
+                            article: article
+                        });
+                        worksCited.push(citation.full);
+                        citationIndex++;
+                    }
+                });
+            });
+            
+            // Add in-text citations to essay
+            let essayWithCitations = essay;
+            const citationsAdded = [];
+            
+            results.forEach(result => {
+                if (result.articles.length > 0) {
+                    const claim = result.claim;
+                    const words = claim.toLowerCase().split(' ');
+                    
+                    // Find the best matching phrase in the essay
+                    for (let i = 4; i <= Math.min(words.length, 12); i++) {
+                        for (let j = 0; j <= words.length - i; j++) {
+                            const phrase = words.slice(j, j + i).join(' ');
+                            const regex = new RegExp(`\\b${phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+                            
+                            let match;
+                            while ((match = regex.exec(essayWithCitations)) !== null) {
+                                // Check if this position already has a citation
+                                const alreadyCited = citationsAdded.some(c => 
+                                    Math.abs(c.position - match.index) < 50
+                                );
+                                
+                                if (!alreadyCited && result.articles.length > 0) {
+                                    const primarySource = result.articles[0];
+                                    const citation = citationMap.get(primarySource.url);
+                                    
+                                    if (citation) {
+                                        const beforeText = essayWithCitations.substring(0, match.index + match[0].length);
+                                        const afterText = essayWithCitations.substring(match.index + match[0].length);
+                                        
+                                        const inTextCitation = ` <span class="mla-citation" title="Click to view source" onclick="window.open('${primarySource.url}', '_blank')">(${citation.shortCitation})</span>`;
+                                        
+                                        essayWithCitations = beforeText + inTextCitation + afterText;
+                                        citationsAdded.push({
+                                            position: match.index,
+                                            citation: citation.shortCitation
+                                        });
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Format the essay in MLA style
+            const formattedEssay = formatMLAEssay(essayWithCitations, worksCited);
+            content.innerHTML = formattedEssay;
+            
+            // Update citation count
+            citationCount.textContent = `${citationsAdded.length} citations added to essay`;
+        }
+        
+        function generateMLACitation(article, index) {
+            const title = article.title || "Untitled Article";
+            const url = article.url;
+            
+            // Extract domain for website name
+            let websiteName = "Web";
+            try {
+                const domain = new URL(url).hostname;
+                if (domain.includes('scholar.google')) websiteName = "Google Scholar";
+                else if (domain.includes('pubmed')) websiteName = "PubMed";
+                else if (domain.includes('jstor')) websiteName = "JSTOR";
+                else if (domain.includes('arxiv')) websiteName = "arXiv";
+                else websiteName = domain.replace('www.', '').replace('.com', '').replace('.org', '').replace('.edu', '');
+            } catch(e) {
+                websiteName = "Web";
+            }
+            
+            // Extract potential author from title (very basic)
+            let author = "Unknown Author";
+            const titleParts = title.split(' - ');
+            if (titleParts.length > 1) {
+                author = titleParts[titleParts.length - 1];
+            }
+            
+            // Get current date for access date
+            const today = new Date();
+            const accessDate = today.toLocaleDateString('en-US', { 
+                day: 'numeric', 
+                month: 'short', 
+                year: 'numeric' 
+            });
+            
+            // Format publication date
+            let pubDate = "";
+            if (article.publishedDate) {
+                const date = new Date(article.publishedDate);
+                pubDate = date.toLocaleDateString('en-US', { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    year: 'numeric' 
+                });
+            }
+            
+            // Generate short citation (for in-text)
+            const shortCitation = author.includes(' ') ? 
+                author.split(' ').pop() : 
+                author;
+            
+            // Generate full citation (for Works Cited)
+            const fullCitation = `<a href="${url}" target="_blank">${author}. "${title}" <em>${websiteName}</em>, ${pubDate || 'n.d.'}, ${url}. Accessed ${accessDate}.</a>`;
+            
+            return {
+                short: shortCitation,
+                full: fullCitation
+            };
+        }
+        
+        function formatMLAEssay(essay, worksCited) {
+            const today = new Date();
+            const formattedDate = today.toLocaleDateString('en-US', { 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+            });
+            
+            // Split essay into paragraphs
+            const paragraphs = essay.split('\n\n').map(p => p.trim()).filter(p => p.length > 0);
+            const formattedParagraphs = paragraphs.map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
+            
+            // Build Works Cited section
+            const worksCitedSection = worksCited.length > 0 ? `
+                <div class="works-cited">
+                    <h2>Works Cited</h2>
+                    ${worksCited.map(citation => `<div class="works-cited-entry">${citation}</div>`).join('')}
+                </div>
+            ` : '';
+            
+            return `
+                <div class="mla-header">
+                    <div>Your Name</div>
+                    <div>Professor Name</div>
+                    <div>Course Name</div>
+                    <div>${formattedDate}</div>
+                </div>
+                
+                <div class="mla-title">Essay Title</div>
+                
+                ${formattedParagraphs}
+                
+                ${worksCitedSection}
+            `;
+        }
+        
+        function downloadMLA() {
+            const mlaContent = document.getElementById('mla-essay-content');
+            const content = mlaContent.innerHTML;
+            
+            // Create a simple HTML document structure
+            const htmlContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>MLA Formatted Essay</title>
+                    <style>
+                        body { font-family: "Times New Roman", serif; font-size: 12pt; line-height: 2; margin: 1in; }
+                        .mla-header { margin-bottom: 24px; }
+                        .mla-title { text-align: center; font-weight: bold; margin: 24px 0; }
+                        p { text-indent: 0.5in; margin-bottom: 0; text-align: justify; }
+                        .mla-citation { background-color: #e3f2fd; border-radius: 3px; padding: 1px 3px; }
+                        .works-cited { margin-top: 48px; }
+                        .works-cited h2 { text-align: center; font-weight: bold; margin-bottom: 24px; }
+                        .works-cited-entry { margin-bottom: 12px; text-indent: -0.5in; margin-left: 0.5in; }
+                    </style>
+                </head>
+                <body>
+                    ${content}
+                </body>
+                </html>
+            `;
+            
+            // Create and download the file
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'mla-formatted-essay.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
     </script>
 </body>
